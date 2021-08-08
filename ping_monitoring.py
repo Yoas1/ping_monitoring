@@ -24,14 +24,14 @@ def if_linux(ipin, interin):
     while condition:
         ping = os.popen(f'ping {ipin} {parameter} 1')
         result = ping.readlines()
-        if result == []:
-            b = int(0)
+        msLine = result[-1].strip()
+        a = msLine.split(' = ')[-1]
+        b = a.split('ms')[0]
+        b = b.split('/')[0]
+        if b == '':
+            b = float(0)
             print('error')
         else:
-            msLine = result[-1].strip()
-            a = msLine.split(' = ')[-1]
-            b = a.split('ms')[0]
-            b = b.split('/')[0]
             b = float(b)
         now = datetime.now()
         y.insert(0, b)
@@ -41,6 +41,8 @@ def if_linux(ipin, interin):
         plt.title(f'Ping Monitor to {ipin}')
         plt.xlabel('Time')
         plt.ylabel('ms')
+        plt.xticks(rotation=90)
+        plt.yticks(rotation=45)
         plt.scatter(x, y, c='green')
         plt.pause(interin)
 
@@ -68,7 +70,9 @@ def if_windows(ipin, interin):
         #print(y)
         plt.xlabel('Time')
         plt.ylabel('ms')
-        plt.title('Ping Monitor')
+        plt.title(f'Ping Monitor to {ipin}')
+        plt.xticks(rotation=90)
+        plt.yticks(rotation=45)
         plt.scatter(x, y, c='green')
         plt.pause(interin)
 
