@@ -11,12 +11,18 @@ def on_close(evt=None):
     condition = False
 fig.canvas.mpl_connect('close_event', on_close)
 #######
+file_path = 'DB.txt'
+if os.path.exists(file_path):
+    os.remove(file_path)
+else:
+    print('Build a DataBase: DB.txt')
 print('The computer`s operating system is:', sys.platform)
 ip = input('Enter ip address to ping:')
 inter = input('time to interval:')
 
 
 def if_linux(ipin, interin):
+    file = open('DB.txt', 'a')
     interin = int(interin)
     y = []
     x = []
@@ -25,16 +31,18 @@ def if_linux(ipin, interin):
         ping = os.popen(f'ping {ipin} {parameter} 1')
         result = ping.readlines()
         msLine = result[-1].strip()
-        a = msLine.split(' = ')[-1]
-        b = a.split('ms')[0]
-        b = b.split('/')[0]
-        if b == '':
-            b = float(0)
+        split = msLine.split(' = ')[-1]
+        ms_result = split.split('ms')[0]
+        ms_result = ms_result.split('/')[0]
+        if ms_result == '':
+            ms_result = float(0)
             print('error')
         else:
-            b = float(b)
+            ms_result = float(ms_result)
+        c = str(ms_result)
         now = datetime.now()
-        y.insert(0, b)
+        file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
+        y.insert(0, ms_result)
         x.insert(0, now.strftime('%H:%M:%S'))
         #print(x)
         #print(y)
@@ -45,9 +53,10 @@ def if_linux(ipin, interin):
         plt.yticks(rotation=45)
         plt.scatter(x, y, c='green')
         plt.pause(interin)
-
+    file.close()
 
 def if_windows(ipin, interin):
+    file = open('DB.txt', 'a')
     interin = int(interin)
     y = []
     x = []
@@ -56,15 +65,17 @@ def if_windows(ipin, interin):
         ping = os.popen(f'ping {ipin} {parameter} 1')
         result = ping.readlines()
         msLine = result[-1].strip()
-        a = msLine.split(' = ')[-1]
-        b = a.split('ms')[0]
-        if b == '1 (100% loss),':
-            b = 0
-        if b == '0 (0% loss),':
-            b = 0
-        b = float(b)
+        split = msLine.split(' = ')[-1]
+        ms_result = split.split('ms')[0]
+        if ms_result == '1 (100% loss),':
+            ms_result = 0
+        if ms_result == '0 (0% loss),':
+            ms_result = 0
+        ms_result = float(ms_result)
+        c = str(ms_result)
         now = datetime.now()
-        y.insert(1, b)
+        file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
+        y.insert(1, ms_result)
         x.insert(1, now.strftime('%H:%M:%S'))
         #print(x)
         #print(y)
@@ -75,6 +86,7 @@ def if_windows(ipin, interin):
         plt.yticks(rotation=45)
         plt.scatter(x, y, c='green')
         plt.pause(interin)
+    file.close()
 
 
 if sys.platform == 'linux':
