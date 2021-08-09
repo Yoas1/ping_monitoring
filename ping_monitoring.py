@@ -52,7 +52,6 @@ def if_linux(ipin, interin):
             split = msLine.split(' = ')[-1]
             ms_result = split.split('ms')[0]
             ms_result = ms_result.split('/')[0]
-            print(ms_result)
             if ms_result == '':
                 ms_result = float(0)
                 print('error')
