@@ -30,29 +30,48 @@ def if_linux(ipin, interin):
     while condition:
         ping = os.popen(f'ping {ipin} {parameter} 1')
         result = ping.readlines()
-        msLine = result[-1].strip()
-        split = msLine.split(' = ')[-1]
-        ms_result = split.split('ms')[0]
-        ms_result = ms_result.split('/')[0]
-        if ms_result == '':
+        if result == []:
             ms_result = float(0)
-            print('error')
+            #print('error')
+            c = str(ms_result)
+            now = datetime.now()
+            file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
+            y.insert(0, ms_result)
+            x.insert(0, now.strftime('%H:%M:%S'))
+            #print(x)
+            #print(y)
+            plt.title(f'Ping Monitor to {ipin}')
+            plt.xlabel('Time')
+            plt.ylabel('ms')
+            plt.xticks(rotation=90)
+            plt.yticks(rotation=45)
+            plt.scatter(x, y, c='green')
+            plt.pause(interin)
         else:
-            ms_result = float(ms_result)
-        c = str(ms_result)
-        now = datetime.now()
-        file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
-        y.insert(0, ms_result)
-        x.insert(0, now.strftime('%H:%M:%S'))
-        #print(x)
-        #print(y)
-        plt.title(f'Ping Monitor to {ipin}')
-        plt.xlabel('Time')
-        plt.ylabel('ms')
-        plt.xticks(rotation=90)
-        plt.yticks(rotation=45)
-        plt.scatter(x, y, c='green')
-        plt.pause(interin)
+            msLine = result[-1].strip()
+            split = msLine.split(' = ')[-1]
+            ms_result = split.split('ms')[0]
+            ms_result = ms_result.split('/')[0]
+            print(ms_result)
+            if ms_result == '':
+                ms_result = float(0)
+                print('error')
+            else:
+                ms_result = float(ms_result)
+            c = str(ms_result)
+            now = datetime.now()
+            file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
+            y.insert(0, ms_result)
+            x.insert(0, now.strftime('%H:%M:%S'))
+            #print(x)
+            #print(y)
+            plt.title(f'Ping Monitor to {ipin}')
+            plt.xlabel('Time')
+            plt.ylabel('ms')
+            plt.xticks(rotation=90)
+            plt.yticks(rotation=45)
+            plt.scatter(x, y, c='green')
+            plt.pause(interin)
     file.close()
 
 def if_windows(ipin, interin):
