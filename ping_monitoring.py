@@ -2,6 +2,8 @@ import os
 import sys
 import matplotlib.pyplot as plt
 from datetime import datetime
+import time
+
 
 #close app
 condition = True
@@ -11,6 +13,18 @@ def on_close(evt=None):
     condition = False
 fig.canvas.mpl_connect('close_event', on_close)
 #######
+
+def on_press(event):
+    print('press', event.key)
+    sys.stdout.flush()
+    global condition
+    global ip
+    if event.key == 'x':
+        condition = False
+        plt.title(f'Ping Monitor to {ip} (Pause)')
+fig.canvas.mpl_connect('key_press_event', on_press)
+
+
 file_path = 'DB.txt'
 if os.path.exists(file_path):
     os.remove(file_path)
@@ -73,6 +87,7 @@ def if_linux(ipin, interin):
             plt.pause(interin)
     file.close()
 
+
 def if_windows(ipin, interin):
     file = open('DB.txt', 'a')
     interin = int(interin)
@@ -109,6 +124,7 @@ def if_windows(ipin, interin):
 
 if sys.platform == 'linux':
     if_linux(ip, inter)
+    fig.canvas.mpl_connect('close_event', on_close)
 if sys.platform == 'windows' or 'win32':
     if_windows(ip, inter)
 
