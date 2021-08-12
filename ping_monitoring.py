@@ -2,18 +2,20 @@ import os
 import sys
 import matplotlib.pyplot as plt
 from datetime import datetime
-import time
 
-
+global ip
 #close app
 condition = True
 fig, ax = plt.subplots()
+
+
 def on_close(evt=None):
     global condition
     condition = False
-fig.canvas.mpl_connect('close_event', on_close)
 #######
 
+
+#stop app
 def on_press(event):
     print('press', event.key)
     sys.stdout.flush()
@@ -22,17 +24,7 @@ def on_press(event):
     if event.key == 'x':
         condition = False
         plt.title(f'Ping Monitor to {ip} (Pause)')
-fig.canvas.mpl_connect('key_press_event', on_press)
-
-
-file_path = 'DB.txt'
-if os.path.exists(file_path):
-    os.remove(file_path)
-else:
-    print('Build a DataBase: DB.txt')
-print('The computer`s operating system is:', sys.platform)
-ip = input('Enter ip address to ping:')
-inter = input('time to interval:')
+##########
 
 
 def if_linux(ipin, interin):
@@ -46,14 +38,11 @@ def if_linux(ipin, interin):
         result = ping.readlines()
         if result == []:
             ms_result = float(0)
-            #print('error')
             c = str(ms_result)
             now = datetime.now()
             file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
             y.insert(0, ms_result)
             x.insert(0, now.strftime('%H:%M:%S'))
-            #print(x)
-            #print(y)
             plt.title(f'Ping Monitor to {ipin}')
             plt.xlabel('Time')
             plt.ylabel('ms')
@@ -76,8 +65,6 @@ def if_linux(ipin, interin):
             file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
             y.insert(0, ms_result)
             x.insert(0, now.strftime('%H:%M:%S'))
-            #print(x)
-            #print(y)
             plt.title(f'Ping Monitor to {ipin}')
             plt.xlabel('Time')
             plt.ylabel('ms')
@@ -110,8 +97,6 @@ def if_windows(ipin, interin):
         file.write(now.strftime('%H:%M:%S') + ' ' + c + '\n')
         y.insert(1, ms_result)
         x.insert(1, now.strftime('%H:%M:%S'))
-        #print(x)
-        #print(y)
         plt.xlabel('Time')
         plt.ylabel('ms')
         plt.title(f'Ping Monitor to {ipin}')
@@ -122,13 +107,28 @@ def if_windows(ipin, interin):
     file.close()
 
 
-if sys.platform == 'linux':
-    if_linux(ip, inter)
+def main():
+    global ip
+    fig.canvas.mpl_connect('key_press_event', on_press)
     fig.canvas.mpl_connect('close_event', on_close)
-if sys.platform == 'windows' or 'win32':
-    if_windows(ip, inter)
+    file_path = 'DB.txt'
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    else:
+        print('Build a DataBase: DB.txt')
+    print('The computer`s operating system is:', sys.platform)
+    print('#### For stop pinging press X ####')
+    ip = input('Enter ip address to ping:')
+    inter = input('time to interval:')
+    if sys.platform == 'linux':
+        if_linux(ip, inter)
+    if sys.platform == 'windows' or 'win32':
+        if_windows(ip, inter)
+    #close app
+    plt.ioff()
+    ######
+    plt.show()
 
-#close app
-plt.ioff()
-######
-plt.show()
+
+if __name__ == "__main__":
+    main()
