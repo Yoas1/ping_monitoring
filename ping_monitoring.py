@@ -23,7 +23,7 @@ def on_press(event):
     global ip
     if event.key == 'x':
         condition = False
-        plt.title(f'Ping Monitor to {ip} (Pause)')
+        plt.title(f'Ping Monitor to {ip} (Stop)')
 ##########
 
 
