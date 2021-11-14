@@ -27,8 +27,8 @@ def on_press(event):
 ##########
 
 
-def if_linux(ipin, interin):
-    file = open('DB.txt', 'a')
+def if_linux(ipin, interin, db):
+    file = open(db, 'a')
     interin = int(interin)
     y = []
     x = []
@@ -75,8 +75,8 @@ def if_linux(ipin, interin):
     file.close()
 
 
-def if_windows(ipin, interin):
-    file = open('DB.txt', 'a')
+def if_windows(ipin, interin, db):
+    file = open(db, 'a')
     interin = int(interin)
     y = []
     x = []
@@ -108,22 +108,24 @@ def if_windows(ipin, interin):
 
 
 def main():
+    db = input("Enter Database name:")
+    db = db + ".txt"
     global ip
     fig.canvas.mpl_connect('key_press_event', on_press)
     fig.canvas.mpl_connect('close_event', on_close)
-    file_path = 'DB.txt'
+    file_path = str(db)
     if os.path.exists(file_path):
         os.remove(file_path)
     else:
-        print('Build a DataBase: DB.txt')
+        print('Build a DataBase: ' + db)
     print('The computer`s operating system is:', sys.platform)
     print('#### For stop pinging press X ####')
     ip = input('Enter ip address to ping:')
     inter = input('time to interval:')
     if sys.platform == 'linux':
-        if_linux(ip, inter)
+        if_linux(ip, inter, db)
     if sys.platform == 'windows' or 'win32':
-        if_windows(ip, inter)
+        if_windows(ip, inter, db)
     #close app
     plt.ioff()
     ######
