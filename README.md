@@ -5,3 +5,7 @@ python ping monitoring tool show graph
   $ pip install matplotlib
   
 The script working on Linux and Windows.
+
+
+Link to EXE file for windows:
+https://drive.google.com/file/d/1fpTKmOE6xlPI31AB0PXALU54WXSRrAMw/view?usp=sharing
